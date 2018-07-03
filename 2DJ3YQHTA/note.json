@@ -1,0 +1,187 @@
+{
+  "paragraphs": [
+    {
+      "text": "%r\n# note: you may need to install caret and e1071 \nlibrary(caret)\n\n# define the filename\nfilename \u003c- \"/mapr/my.cluster/user/mapr/containers/iris/data/iris.csv\"\n# load the CSV file from the local directory\ndataset \u003c- read.csv(filename, header\u003dFALSE)\n# set the column names in the dataset\ncolnames(dataset) \u003c- c(\"Sepal.Length\",\"Sepal.Width\",\"Petal.Length\",\"Petal.Width\",\"Species\")\n\nhead(dataset)",
+      "user": "mapr",
+      "dateUpdated": "Jul 3, 2018 1:49:33 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "r",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/r"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nSepal.Length Sepal.Width Petal.Length Petal.Width     Species\n1          5.1         3.5          1.4         0.2 Iris-setosa\n2          4.9         3.0          1.4         0.2 Iris-setosa\n3          4.7         3.2          1.3         0.2 Iris-setosa\n4          4.6         3.1          1.5         0.2 Iris-setosa\n5          5.0         3.6          1.4         0.2 Iris-setosa\n6          5.4         3.9          1.7         0.4 Iris-setosa\n\n\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1530650811894_-1334116513",
+      "id": "20180703-134651_1845373752",
+      "dateCreated": "Jul 3, 2018 1:46:51 PM",
+      "dateStarted": "Jul 3, 2018 1:49:33 PM",
+      "dateFinished": "Jul 3, 2018 1:49:34 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%r\n# create a list of 80% of the rows in the original dataset we can use for training\nvalidation_index \u003c- createDataPartition(dataset$Species, p\u003d0.80, list\u003dFALSE)\n# select 20% of the data for validation\nvalidation \u003c- dataset[-validation_index,]\n# use the remaining 80% of data to training and testing the models\ndataset \u003c- dataset[validation_index,]\n\n# Run algorithms using 10-fold cross validation\ncontrol \u003c- trainControl(method\u003d\"cv\", number\u003d10)\nmetric \u003c- \"Accuracy\"\n\nhead(validation)",
+      "user": "mapr",
+      "dateUpdated": "Jul 3, 2018 1:50:08 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "r"
+        },
+        "editorMode": "ace/mode/r"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nSepal.Length Sepal.Width Petal.Length Petal.Width     Species\n2           4.9         3.0          1.4         0.2 Iris-setosa\n14          4.3         3.0          1.1         0.1 Iris-setosa\n15          5.8         4.0          1.2         0.2 Iris-setosa\n16          5.7         4.4          1.5         0.4 Iris-setosa\n20          5.1         3.8          1.5         0.3 Iris-setosa\n27          5.0         3.4          1.6         0.4 Iris-setosa\n\n\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1530650830047_-1468147048",
+      "id": "20180703-134710_29662316",
+      "dateCreated": "Jul 3, 2018 1:47:10 PM",
+      "dateStarted": "Jul 3, 2018 1:50:08 PM",
+      "dateFinished": "Jul 3, 2018 1:50:08 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%r\n# train algorithms\nset.seed(7)\nfit.lda \u003c- train(Species~., data\u003ddataset, method\u003d\"lda\", metric\u003dmetric, trControl\u003dcontrol)\nfit.cart \u003c- train(Species~., data\u003ddataset, method\u003d\"rpart\", metric\u003dmetric, trControl\u003dcontrol)\nfit.knn \u003c- train(Species~., data\u003ddataset, method\u003d\"knn\", metric\u003dmetric, trControl\u003dcontrol)\nfit.svm \u003c- train(Species~., data\u003ddataset, method\u003d\"svmRadial\", metric\u003dmetric, trControl\u003dcontrol)\nfit.rf \u003c- train(Species~., data\u003ddataset, method\u003d\"rf\", metric\u003dmetric, trControl\u003dcontrol)\n\n# summarize accuracy of models\nresults \u003c- resamples(list(lda\u003dfit.lda, cart\u003dfit.cart, knn\u003dfit.knn, svm\u003dfit.svm, rf\u003dfit.rf))\nsummary(results)",
+      "user": "mapr",
+      "dateUpdated": "Jul 3, 2018 1:50:38 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "r"
+        },
+        "editorMode": "ace/mode/r"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nCall:\nsummary.resamples(object \u003d results)\n\nModels: lda, cart, knn, svm, rf \nNumber of resamples: 10 \n\nAccuracy \n          Min.   1st Qu.    Median      Mean 3rd Qu. Max. NA\u0027s\nlda  0.9166667 0.9375000 1.0000000 0.9750000       1    1    0\ncart 0.9166667 0.9166667 0.9583333 0.9583333       1    1    0\nknn  0.9166667 1.0000000 1.0000000 0.9916667       1    1    0\nsvm  0.8333333 0.9375000 1.0000000 0.9666667       1    1    0\nrf   0.9166667 0.9166667 0.9583333 0.9583333       1    1    0\n\nKappa \n      Min. 1st Qu. Median   Mean 3rd Qu. Max. NA\u0027s\nlda  0.875 0.90625 1.0000 0.9625       1    1    0\ncart 0.875 0.87500 0.9375 0.9375       1    1    0\nknn  0.875 1.00000 1.0000 0.9875       1    1    0\nsvm  0.750 0.90625 1.0000 0.9500       1    1    0\nrf   0.875 0.87500 0.9375 0.9375       1    1    0\n\n\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1530650992353_-1147084219",
+      "id": "20180703-134952_1620226129",
+      "dateCreated": "Jul 3, 2018 1:49:52 PM",
+      "dateStarted": "Jul 3, 2018 1:50:38 PM",
+      "dateFinished": "Jul 3, 2018 1:50:47 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%r\n\n# estimate skill of LDA on the validation dataset\npredictions \u003c- predict(fit.lda, validation)\nconfusionMatrix(predictions, validation$Species)\n\n#write model to file\n#saveRDS(fit.rf, \"/mapr/my.cluster/user/mapr/containers/iris/model/iris_rf.Rdata\")",
+      "user": "mapr",
+      "dateUpdated": "Jul 3, 2018 1:51:28 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "r"
+        },
+        "editorMode": "ace/mode/r"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nConfusion Matrix and Statistics\n\n             Reference\n\n\nPrediction        Iris-setosa Iris-versicolor Iris-virginica\n  Iris-setosa              10               0              0\n  Iris-versicolor           0              10              0\n  Iris-virginica            0               0             10\n\nOverall Statistics\n\n           Accuracy : 1          \n             95% CI : (0.8843, 1)\nNo Information Rate : 0.3333     \nP-Value [Acc \u0026gt; NIR] : 4.857e-15  \n\n              Kappa : 1          \n\n\nMcnemar\u0027s Test P-Value : NA         \n\nStatistics by Class:\n\n                 Class: Iris-setosa Class: Iris-versicolor\n\n\nSensitivity                      1.0000                 1.0000\nSpecificity                      1.0000                 1.0000\nPos Pred Value                   1.0000                 1.0000\nNeg Pred Value                   1.0000                 1.0000\nPrevalence                       0.3333                 0.3333\nDetection Rate                   0.3333                 0.3333\nDetection Prevalence             0.3333                 0.3333\nBalanced Accuracy                1.0000                 1.0000\n                     Class: Iris-virginica\nSensitivity                         1.0000\nSpecificity                         1.0000\nPos Pred Value                      1.0000\nNeg Pred Value                      1.0000\nPrevalence                          0.3333\nDetection Rate                      0.3333\nDetection Prevalence                0.3333\nBalanced Accuracy                   1.0000\n\n\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1530651038213_-101059229",
+      "id": "20180703-135038_1074200878",
+      "dateCreated": "Jul 3, 2018 1:50:38 PM",
+      "dateStarted": "Jul 3, 2018 1:51:28 PM",
+      "dateFinished": "Jul 3, 2018 1:51:29 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%r\n",
+      "user": "mapr",
+      "dateUpdated": "Jul 3, 2018 1:51:28 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1530651088731_1038074995",
+      "id": "20180703-135128_1047390960",
+      "dateCreated": "Jul 3, 2018 1:51:28 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "R random forest model",
+  "id": "2DJ3YQHTA",
+  "angularObjects": {
+    "2DF6QAH6N:shared_process": [],
+    "2DF67XVWU:shared_process": [],
+    "2DJ1RSZ5U:shared_process": [],
+    "2DG3VUFGM:shared_process": [],
+    "2DGSSMTK2:shared_process": [],
+    "2DHRYYHKM:shared_process": [],
+    "2DHEXTMS1:shared_process": [],
+    "2DFSPEFZV:shared_process": [],
+    "2DGF4549F:shared_process": [],
+    "2DFYWDC34:shared_process": [],
+    "2DHKQEPEM:shared_process": [],
+    "2DHXPY5A1:shared_process": [],
+    "2DEDJ7Q41:shared_process": [],
+    "2DG7U1B11:shared_process": [],
+    "2DEWJBQKM:shared_process": [],
+    "2DGKZ3BDC:shared_process": [],
+    "2DEU7T9SU:shared_process": [],
+    "2DHPPK6EC:shared_process": [],
+    "2DHXG6QT2:shared_process": [],
+    "2DGMVUX6M:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}
