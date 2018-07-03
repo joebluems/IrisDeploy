@@ -1,0 +1,256 @@
+{
+  "paragraphs": [
+    {
+      "text": "# Load libraries\nimport pandas\nimport pickle\nfrom pandas.plotting import scatter_matrix\nfrom sklearn import model_selection\nfrom sklearn.metrics import classification_report\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.metrics import accuracy_score\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.discriminant_analysis import LinearDiscriminantAnalysis\nfrom sklearn.naive_bayes import GaussianNB\nfrom sklearn.svm import SVC",
+      "user": "mapr",
+      "dateUpdated": "Jun 21, 2018 2:49:36 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1529445925314_-80664412",
+      "id": "20180619-150525_1980331496",
+      "dateCreated": "Jun 19, 2018 3:05:25 PM",
+      "dateStarted": "Jun 21, 2018 2:49:36 PM",
+      "dateFinished": "Jun 21, 2018 2:49:36 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "names \u003d [\u0027sepal-length\u0027, \u0027sepal-width\u0027, \u0027petal-length\u0027, \u0027petal-width\u0027, \u0027class\u0027]\ndataset \u003d pandas.read_csv(\"/mapr/my.cluster/user/mapr/containers/iris/data/iris.csv\", names\u003dnames)\n\n# Split-out validation dataset\narray \u003d dataset.values\nX \u003d array[:,0:4]\nY \u003d array[:,4]\nvalidation_size \u003d 0.20\nseed \u003d 7\nX_train, X_validation, Y_train, Y_validation \u003d model_selection.train_test_split(X, Y, test_size\u003dvalidation_size, random_state\u003dseed)\n\nprint X_validation\n",
+      "user": "mapr",
+      "dateUpdated": "Jun 21, 2018 2:49:45 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "[[5.9 3.0 5.1 1.8]\n [5.4 3.0 4.5 1.5]\n [5.0 3.5 1.3 0.3]\n [5.6 3.0 4.5 1.5]\n [4.9 2.5 4.5 1.7]\n [4.5 2.3 1.3 0.3]\n [6.9 3.1 4.9 1.5]\n [5.6 2.7 4.2 1.3]\n [4.8 3.4 1.6 0.2]\n [6.4 3.2 4.5 1.5]\n [6.7 3.0 5.0 1.7]\n [6.0 3.4 4.5 1.6]\n [5.2 4.1 1.5 0.1]\n [7.2 3.6 6.1 2.5]\n [5.2 3.4 1.4 0.2]\n [5.9 3.2 4.8 1.8]\n [6.7 2.5 5.8 1.8]\n [6.4 3.1 5.5 1.8]\n [5.1 3.8 1.6 0.2]\n [4.9 3.1 1.5 0.1]\n [5.8 2.7 3.9 1.2]\n [6.9 3.2 5.7 2.3]\n [6.1 2.9 4.7 1.4]\n [6.0 2.2 5.0 1.5]\n [7.2 3.0 5.8 1.6]\n [6.0 3.0 4.8 1.8]\n [6.2 2.9 4.3 1.3]\n [5.5 2.4 3.8 1.1]\n [5.8 2.7 5.1 1.9]\n [6.7 3.1 5.6 2.4]]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1529445933690_708470906",
+      "id": "20180619-150533_904887326",
+      "dateCreated": "Jun 19, 2018 3:05:33 PM",
+      "dateStarted": "Jun 21, 2018 2:49:45 PM",
+      "dateFinished": "Jun 21, 2018 2:49:45 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "# Test options and evaluation metric\nseed \u003d 7\nscoring \u003d \u0027accuracy\u0027\n# Spot Check Algorithms\nmodels \u003d []\nmodels.append((\u0027LR\u0027, LogisticRegression()))\nmodels.append((\u0027LDA\u0027, LinearDiscriminantAnalysis()))\nmodels.append((\u0027KNN\u0027, KNeighborsClassifier()))\nmodels.append((\u0027CART\u0027, DecisionTreeClassifier()))\nmodels.append((\u0027NB\u0027, GaussianNB()))\nmodels.append((\u0027SVM\u0027, SVC()))\n\n# evaluate each model in turn\nresults \u003d []\nnames \u003d []\nfor name, model in models:\n\tkfold \u003d model_selection.KFold(n_splits\u003d10, random_state\u003dseed)\n\tcv_results \u003d model_selection.cross_val_score(model, X_train, Y_train, cv\u003dkfold, scoring\u003dscoring)\n\tresults.append(cv_results)\n\tnames.append(name)\n\tmsg \u003d \"%s: %f (%f)\" % (name, cv_results.mean(), cv_results.std())\n\tprint(msg)\n\n",
+      "user": "mapr",
+      "dateUpdated": "Jun 21, 2018 2:57:55 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "LR: 0.966667 (0.040825)\nLDA: 0.975000 (0.038188)\nKNN: 0.983333 (0.033333)\nCART: 0.966667 (0.040825)\nNB: 0.975000 (0.053359)\nSVM: 0.991667 (0.025000)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1529445954292_-784138644",
+      "id": "20180619-150554_2106822725",
+      "dateCreated": "Jun 19, 2018 3:05:54 PM",
+      "dateStarted": "Jun 21, 2018 2:57:55 PM",
+      "dateFinished": "Jun 21, 2018 2:57:55 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "## Build KNN - dump model\nknn \u003d KNeighborsClassifier()\nknn.fit(X_train, Y_train)\npredictions \u003d knn.predict(X_validation)\nprint(accuracy_score(Y_validation, predictions))\nprint(confusion_matrix(Y_validation, predictions))\nprint(classification_report(Y_validation, predictions))\n\nfilename \u003d \u0027/mapr/my.cluster/user/mapr/containers/iris/model/iris_knn_123.sav\u0027\n#pickle.dump(knn, open(filename, \u0027wb\u0027))\n",
+      "user": "mapr",
+      "dateUpdated": "Jun 21, 2018 2:58:31 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "0.9\n[[ 7  0  0]\n [ 0 11  1]\n [ 0  2  9]]\n                 precision    recall  f1-score   support\n\n    Iris-setosa       1.00      1.00      1.00         7\nIris-versicolor       0.85      0.92      0.88        12\n Iris-virginica       0.90      0.82      0.86        11\n\n    avg / total       0.90      0.90      0.90        30\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1529445999564_305162114",
+      "id": "20180619-150639_444773991",
+      "dateCreated": "Jun 19, 2018 3:06:39 PM",
+      "dateStarted": "Jun 21, 2018 2:58:31 PM",
+      "dateFinished": "Jun 21, 2018 2:58:31 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "## Build SVM - dump model\nsvm \u003d SVC()\nsvm.fit(X_train, Y_train)\npredictions \u003d svm.predict(X_validation)\nprint(accuracy_score(Y_validation, predictions))\nprint(confusion_matrix(Y_validation, predictions))\nprint(classification_report(Y_validation, predictions))\n\nfilename \u003d \u0027/mapr/my.cluster/user/mapr/containers/iris/model/iris_svm_456.sav\u0027\n#pickle.dump(svm, open(filename, \u0027wb\u0027))\n",
+      "user": "mapr",
+      "dateUpdated": "Jun 21, 2018 2:59:45 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "0.9333333333333333\n[[ 7  0  0]\n [ 0 10  2]\n [ 0  0 11]]\n                 precision    recall  f1-score   support\n\n    Iris-setosa       1.00      1.00      1.00         7\nIris-versicolor       1.00      0.83      0.91        12\n Iris-virginica       0.85      1.00      0.92        11\n\n    avg / total       0.94      0.93      0.93        30\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1529446031836_-324040256",
+      "id": "20180619-150711_575913208",
+      "dateCreated": "Jun 19, 2018 3:07:11 PM",
+      "dateStarted": "Jun 21, 2018 2:59:45 PM",
+      "dateFinished": "Jun 21, 2018 2:59:45 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "## Build CART - dump model\ncart \u003d DecisionTreeClassifier()\ncart.fit(X_train, Y_train)\npredictions \u003d cart.predict(X_validation)\nprint(accuracy_score(Y_validation, predictions))\nprint(confusion_matrix(Y_validation, predictions))\nprint(classification_report(Y_validation, predictions))\n\nfilename \u003d \u0027/mapr/my.cluster/user/mapr/containers/iris/model/iris_car_789.sav\u0027\n#pickle.dump(cart, open(filename, \u0027wb\u0027))\n",
+      "user": "mapr",
+      "dateUpdated": "Jun 21, 2018 2:59:52 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "0.8666666666666667\n[[ 7  0  0]\n [ 0 11  1]\n [ 0  3  8]]\n                 precision    recall  f1-score   support\n\n    Iris-setosa       1.00      1.00      1.00         7\nIris-versicolor       0.79      0.92      0.85        12\n Iris-virginica       0.89      0.73      0.80        11\n\n    avg / total       0.87      0.87      0.87        30\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1529446063866_474729109",
+      "id": "20180619-150743_317918023",
+      "dateCreated": "Jun 19, 2018 3:07:43 PM",
+      "dateStarted": "Jun 21, 2018 2:59:52 PM",
+      "dateFinished": "Jun 21, 2018 2:59:52 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "mapr",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1529446085894_-2010132529",
+      "id": "20180619-150805_1139899523",
+      "dateCreated": "Jun 19, 2018 3:08:05 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Iris Example",
+  "id": "2DHDMJEK6",
+  "angularObjects": {
+    "2DF6QAH6N:shared_process": [],
+    "2DF67XVWU:shared_process": [],
+    "2DJ1RSZ5U:shared_process": [],
+    "2DG3VUFGM:shared_process": [],
+    "2DGSSMTK2:shared_process": [],
+    "2DHRYYHKM:shared_process": [],
+    "2DHEXTMS1:shared_process": [],
+    "2DFSPEFZV:shared_process": [],
+    "2DGF4549F:shared_process": [],
+    "2DFYWDC34:shared_process": [],
+    "2DHKQEPEM:shared_process": [],
+    "2DHXPY5A1:shared_process": [],
+    "2DEDJ7Q41:shared_process": [],
+    "2DG7U1B11:shared_process": [],
+    "2DEWJBQKM:shared_process": [],
+    "2DGKZ3BDC:shared_process": [],
+    "2DEU7T9SU:shared_process": [],
+    "2DHPPK6EC:shared_process": [],
+    "2DHXG6QT2:shared_process": [],
+    "2DGMVUX6M:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}

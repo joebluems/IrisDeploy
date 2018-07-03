@@ -1,0 +1,26 @@
+Building several models (offline):
+> python iris_model.py
+
+note: if you get any "port already in use" messages, look for open ports and kill processes:
+> netstat -ntlp
+> kill -9 PID
+
+
+Create container...
+Create environment... 
+sudo pip install gunicorn
+sudo pip install flask
+sudo pip install sklearn
+sudo pip install scipy
+
+MODEL #1:
+> gunicorn --bind 0.0.0.0:5000 server:app
+
+MODEL #2:
+> gunicorn --bind 0.0.0.0:5001 server2:app
+
+MODEL #3:
+> Rscript jugServer.R.R
+
+SCORE:
+> python post.py
