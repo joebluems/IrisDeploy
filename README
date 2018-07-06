@@ -12,6 +12,7 @@ sudo pip install gunicorn
 sudo pip install flask
 sudo pip install sklearn
 sudo pip install scipy
+Install R and jug library
 
 MODEL #1:
 > gunicorn --bind 0.0.0.0:5000 server:app
