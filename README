@@ -1,12 +1,13 @@
-Building several models (offline):
-> python iris_model.py
+* Building several models (offline):
+Models were designed in Zeppelin notebooks (attached)
+They could also be done via scripts submitted from command line, or other notebooks.
 
 note: if you get any "port already in use" messages, look for open ports and kill processes:
 > netstat -ntlp
 > kill -9 PID
 
 
-Create container...
+* Create container...
 Create environment... 
 sudo pip install gunicorn
 sudo pip install flask
@@ -14,6 +15,7 @@ sudo pip install sklearn
 sudo pip install scipy
 Install R and jug library
 
+* Deploy models (this is done in python 2.7.5 and R 3.4.3)
 MODEL #1:
 > gunicorn --bind 0.0.0.0:5000 server:app
 
@@ -21,7 +23,8 @@ MODEL #2:
 > gunicorn --bind 0.0.0.0:5001 server2:app
 
 MODEL #3:
-> Rscript jugServer.R.R
+> Rscript jugServer.R
 
+* Call the models via Post (done in Python 3.6.3 & Anaconda)
 SCORE:
 > python post.py
